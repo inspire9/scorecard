@@ -3,7 +3,7 @@ require 'bundler'
 Bundler.setup :default, :development
 
 require 'combustion'
-require 'anansi'
+require 'carmack'
 
 Combustion.initialize! :active_record
 
