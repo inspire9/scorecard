@@ -1,6 +1,8 @@
 # Carmack
 
-TODO: Write a gem description
+A Rails engine for tracking points, badges and levels for gamification.
+
+For anyone who comes across this, please note this is not yet feature complete, and the API will very likely change.
 
 ## Installation
 
@@ -8,17 +10,33 @@ Add this line to your application's Gemfile:
 
     gem 'carmack'
 
-And then execute:
+Don't forget to bundle:
 
     $ bundle
 
-Or install it yourself as:
+Then, add the migrations to your app and update your database accordingly:
 
-    $ gem install carmack
+    $ rake carmack:install:migrations db:migrate
 
 ## Usage
 
-TODO: Write usage instructions here
+In an initializer, define the events that points are tied to - with a unique context and the number of points:
+
+```ruby
+Carmack::PointRule.new :new_post, 50
+```
+
+And then, when you want to fire those events, use code much like the following:
+
+```ruby
+Carmack::Points.score :new_post, gameable: post
+```
+
+This presumes that the user the points are for is a method on the gameable object. If that's not the case, you can pass in a custom user:
+
+```ruby
+Carmack::Points.score :new_post, gameable: post, user: user
+```
 
 ## Contributing
 
@@ -27,3 +45,7 @@ TODO: Write usage instructions here
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## Licence
+
+Copyright (c) 2013, Carmack is developed and maintained by [Inspire9](http://inspire9.com), and is released under the open MIT Licence.
