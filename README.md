@@ -18,13 +18,25 @@ Then, add the migrations to your app and update your database accordingly:
 
     $ rake carmack:install:migrations db:migrate
 
-## Usage
+## Rules
 
 In an initializer, define the events that points are tied to - with a unique context and the number of points:
 
 ```ruby
 Carmack::PointRule.new :new_post, 50
 ```
+
+You can also provide a block with logic for whether to award the points:
+
+```ruby
+Carmack::PointRule.new :new_post, 50 do |payload|
+  payload[:user].posts.count <= 1
+end
+```
+
+The payload object contains the context plus every option you send through to `score` call (see below).
+
+## Scoring
 
 And then, when you want to fire those events, use code much like the following:
 
