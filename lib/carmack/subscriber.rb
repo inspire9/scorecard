@@ -15,14 +15,15 @@ class Carmack::Subscriber
 
   def points(event)
     rule = Carmack.rules.find_rule_for_points event.payload[:context]
+
+    event.payload[:amount]     ||= rule.amount
+    event.payload[:identifier] ||= event.payload[:gameable].id
+    event.payload[:user]       ||= event.payload[:gameable].user
+
     return unless rule && rule.allowed?(event.payload)
 
     Carmack::Point.create(
-      context:    rule.context,
-      amount:     event.payload[:amount]     || rule.amount,
-      identifier: event.payload[:identifier] || event.payload[:gameable].id,
-      user:       event.payload[:user]       || event.payload[:gameable].user,
-      gameable:   event.payload[:gameable]
+      event.payload.slice(:context, :amount, :identifier, :user, :gameable)
     )
   end
 end

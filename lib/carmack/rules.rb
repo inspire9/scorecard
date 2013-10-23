@@ -5,8 +5,8 @@ class Carmack::Rules
     @point_rules = []
   end
 
-  def add_rule_for_points(context, amount, &condition)
-    point_rules << Carmack::PointRule.new(context, amount, &condition)
+  def add_rule_for_points(context, amount, options = {})
+    point_rules << Carmack::PointRule.new(context, amount, options)
   end
 
   def find_rule_for_points(context)
