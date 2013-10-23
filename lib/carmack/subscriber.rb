@@ -14,7 +14,7 @@ class Carmack::Subscriber
   end
 
   def points(event)
-    rule = Carmack::PointRule.find event.payload[:context]
+    rule = Carmack.rules.find_rule_for_points event.payload[:context]
     return unless rule && rule.allowed?(event.payload)
 
     Carmack::Point.create(

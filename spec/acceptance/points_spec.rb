@@ -2,11 +2,13 @@ require 'spec_helper'
 
 describe 'Carmack' do
   before :each do
-    Carmack::PointRule.rules.clear
+    Carmack.rules.clear
   end
 
   it "stores points for configured behaviour" do
-    Carmack::PointRule.new :new_post, 50
+    Carmack.configure do |config|
+      config.rules.add_rule_for_points :new_post, 50
+    end
 
     user = User.create!
     post = Post.create! user: user
@@ -23,7 +25,11 @@ describe 'Carmack' do
   end
 
   it "only stores points when provided logic passes" do
-    Carmack::PointRule.new(:new_post, 50) { |payload| Post.count <= 1 }
+    Carmack.configure do |config|
+      config.rules.add_rule_for_points :new_post, 50 do |payload|
+        Post.count <= 1
+      end
+    end
 
     user = User.create!
     post = Post.create! user: user
