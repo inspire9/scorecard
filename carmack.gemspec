@@ -17,5 +17,6 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency 'combustion',  '~> 0.5.1'
   spec.add_development_dependency 'rspec-rails', '~> 2.14.0'
+  spec.add_development_dependency 'sidekiq',     '~> 2.15'
   spec.add_development_dependency 'sqlite3',     '~> 1.3.8'
 end
