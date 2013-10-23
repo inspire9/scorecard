@@ -13,3 +13,4 @@ require 'carmack/points'
 require 'carmack/point_rule'
 require 'carmack/rules'
 require 'carmack/subscriber'
+require 'carmack/worker' if defined?(Sidekiq)

@@ -3,6 +3,8 @@ require 'bundler'
 Bundler.setup :default, :development
 
 require 'combustion'
+require 'sidekiq'
+require 'sidekiq/testing/inline'
 require 'carmack'
 
 Combustion.initialize! :active_record

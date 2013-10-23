@@ -90,4 +90,23 @@ describe 'Carmack' do
       amount:  50
     ).count.should == 1
   end
+
+  it "allows for processing via Sidekiq" do
+    Carmack.configure do |config|
+      config.rules.add_rule_for_points :new_user, 20
+    end
+
+    user = User.create!
+    Carmack::Points.score_async :new_user, gameable: user, user: user
+
+    Carmack::Point.where(
+      context:       'new_user',
+      amount:        20,
+      identifier:    user.id.to_s,
+      user_id:       user.id,
+      user_type:     'User',
+      gameable_id:   user.id,
+      gameable_type: 'User'
+    ).should_not be_empty
+  end
 end
