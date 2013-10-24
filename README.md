@@ -26,12 +26,11 @@ In an initializer, define the events that points are tied to - with a unique con
 Scorecard::PointRule.new :new_post, 50
 ```
 
-You can also provide a block with logic for whether to award the points:
+You can also provide a block with logic for whether to award the points, the maximum number of points allowed to be awarded for this rule, and the timeframe for that limit:
 
 ```ruby
-Scorecard::PointRule.new :new_post, 50 do |payload|
-  payload[:user].posts.count <= 1
-end
+Scorecard::PointRule.new :new_post, 50, limit: 100, timeframe: :day,
+  if: lambda { |payload| payload[:user].posts.count <= 1 }
 ```
 
 The payload object contains the context plus every option you send through to `score` call (see below).
@@ -48,6 +47,12 @@ This presumes that the user the points are for is a method on the gameable objec
 
 ```ruby
 Scorecard::Points.score :new_post, gameable: post, user: user
+```
+
+If you're using Sidekiq, you can push the scoring behaviour into a background worker using `score_async` instead. Make sure `scorecard` is listed below `sidekiq` in your `Gemfile`.
+
+```ruby
+Scorecard::Points.score_async :new_post, gameable: post
 ```
 
 ## Contributing
