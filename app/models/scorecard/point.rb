@@ -11,15 +11,15 @@ class Scorecard::Point < ActiveRecord::Base
   validates :amount,     presence: true
   validates :user,       presence: true
 
-  def self.for_user(context, user)
-    where(
-      context:   context,
-      user_id:   user.id,
-      user_type: user.class.name
-    )
+  def self.for_context(context)
+    where context: context
+  end
+
+  def self.for_user(user)
+    where user_id: user.id, user_type: user.class.name
   end
 
   def self.for_user_in_timeframe(context, user, timeframe)
-    for_user(context, user).where(created_at: timeframe)
+    for_context(context).for_user(user).where(created_at: timeframe)
   end
 end

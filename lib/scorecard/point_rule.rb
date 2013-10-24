@@ -21,7 +21,7 @@ class Scorecard::PointRule
 
   def current_points(payload)
     if timeframe.nil?
-      Scorecard::Point.for_user(payload[:context], payload[:user])
+      Scorecard::Point.for_context(payload[:context]).for_user(payload[:user])
     else
       Scorecard::Point.for_user_in_timeframe(payload[:context], payload[:user], time_range)
     end

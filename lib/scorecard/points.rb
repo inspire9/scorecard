@@ -15,4 +15,8 @@ class Scorecard::Points
 
     Scorecard::Worker.perform_async context, options.stringify_keys
   end
+
+  def self.for(user)
+    Scorecard::Point.for_user(user).sum(:amount)
+  end
 end

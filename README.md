@@ -55,6 +55,14 @@ If you're using Sidekiq, you can push the scoring behaviour into a background wo
 Scorecard::Points.score_async :new_post, gameable: post
 ```
 
+## Results
+
+To get the current points count for a given user:
+
+```ruby
+Scorecard::Points.for user
+```
+
 ## Contributing
 
 1. Fork it
