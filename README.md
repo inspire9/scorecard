@@ -8,7 +8,7 @@ For anyone who comes across this, please note this is not yet feature complete, 
 
 Add this line to your application's Gemfile:
 
-    gem 'scorecard'
+    gem 'scorecard', '0.0.2'
 
 Don't forget to bundle:
 
