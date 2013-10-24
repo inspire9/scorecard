@@ -4,6 +4,10 @@ class Scorecard::Point < ActiveRecord::Base
   belongs_to :user,     polymorphic: true
   belongs_to :gameable, polymorphic: true
 
+  if Rails.version.to_s < '4.0.0'
+    attr_accessible :context, :identifier, :amount, :gameable, :user
+  end
+
   validates :context,    presence: true
   validates :identifier, presence: true, uniqueness: {
     scope: [:context, :user_type, :user_id]
