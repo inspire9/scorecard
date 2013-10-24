@@ -1,12 +1,12 @@
 # coding: utf-8
 Gem::Specification.new do |spec|
-  spec.name          = 'carmack'
+  spec.name          = 'scorecard'
   spec.version       = '0.0.1'
   spec.authors       = ['Pat Allan']
   spec.email         = ['pat@freelancing-gods.com']
-  spec.summary       = 'Rails Engine for common carmack patterns'
+  spec.summary       = 'Rails Engine for common scorecard patterns'
   spec.description   = 'Use an engine to track points, badges and levels in your Rails app.'
-  spec.homepage      = 'https://github.com/inspire9/carmack'
+  spec.homepage      = 'https://github.com/inspire9/scorecard'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files`.split($/)

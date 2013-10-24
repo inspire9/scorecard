@@ -1,4 +1,4 @@
-class Carmack::PointRule
+class Scorecard::PointRule
   TIMESPANS = [:day, :week, :month, :year]
 
   attr_accessor :context, :amount, :options
@@ -21,9 +21,9 @@ class Carmack::PointRule
 
   def current_points(payload)
     if timeframe.nil?
-      Carmack::Point.for_user(payload[:context], payload[:user])
+      Scorecard::Point.for_user(payload[:context], payload[:user])
     else
-      Carmack::Point.for_user_in_timeframe(payload[:context], payload[:user], time_range)
+      Scorecard::Point.for_user_in_timeframe(payload[:context], payload[:user], time_range)
     end
   end
 

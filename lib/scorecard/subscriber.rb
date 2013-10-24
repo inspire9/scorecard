@@ -1,4 +1,4 @@
-class Carmack::Subscriber
+class Scorecard::Subscriber
   def self.attach_to(suffix)
     subscriber = new
     subscriber.public_methods(false).each do |event|
@@ -14,7 +14,7 @@ class Carmack::Subscriber
   end
 
   def points(event)
-    rule = Carmack.rules.find_rule_for_points event.payload[:context]
+    rule = Scorecard.rules.find_rule_for_points event.payload[:context]
 
     event.payload[:amount]     ||= rule.amount
     event.payload[:identifier] ||= event.payload[:gameable].id
@@ -22,7 +22,7 @@ class Carmack::Subscriber
 
     return unless rule && rule.allowed?(event.payload)
 
-    Carmack::Point.create(
+    Scorecard::Point.create(
       event.payload.slice(:context, :amount, :identifier, :user, :gameable)
     )
   end

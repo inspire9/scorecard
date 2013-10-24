@@ -1,4 +1,4 @@
-class Carmack::Worker
+class Scorecard::Worker
   include Sidekiq::Worker
 
   def perform(context, options)
@@ -9,6 +9,6 @@ class Carmack::Worker
       options[prefix] = klass.find options.delete("#{prefix}_id")
     end
 
-    Carmack::Points.score context.to_sym, options.symbolize_keys
+    Scorecard::Points.score context.to_sym, options.symbolize_keys
   end
 end

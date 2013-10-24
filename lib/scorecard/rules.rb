@@ -1,4 +1,4 @@
-class Carmack::Rules
+class Scorecard::Rules
   attr_reader :point_rules
 
   def initialize
@@ -6,7 +6,7 @@ class Carmack::Rules
   end
 
   def add_rule_for_points(context, amount, options = {})
-    point_rules << Carmack::PointRule.new(context, amount, options)
+    point_rules << Scorecard::PointRule.new(context, amount, options)
   end
 
   def find_rule_for_points(context)

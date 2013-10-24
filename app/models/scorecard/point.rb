@@ -1,5 +1,5 @@
-class Carmack::Point < ActiveRecord::Base
-  self.table_name = 'carmack_points'
+class Scorecard::Point < ActiveRecord::Base
+  self.table_name = 'scorecard_points'
 
   belongs_to :user,     polymorphic: true
   belongs_to :gameable, polymorphic: true

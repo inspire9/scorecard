@@ -1,6 +1,6 @@
-class Carmack::Points
+class Scorecard::Points
   def self.score(context, options)
-    ActiveSupport::Notifications.instrument 'points.carmack',
+    ActiveSupport::Notifications.instrument 'points.scorecard',
       options.merge(context: context)
   end
 
@@ -13,6 +13,6 @@ class Carmack::Points
       options.delete prefix
     end
 
-    Carmack::Worker.perform_async context, options.stringify_keys
+    Scorecard::Worker.perform_async context, options.stringify_keys
   end
 end
