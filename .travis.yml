@@ -5,6 +5,6 @@ rvm:
 notifications:
   campfire:
     rooms:
-      - secure: "OmCCqj/S4Yj/KzSEN7BoL86l16LhydqcJqOGMB44A/7H9ExcMfv6prD1X7or/NKaqM3IWNZX7ElvCuc8u3R8QD377ry1L+d3vqgfXSbIjKhW/g4YgktRIzBEEH37Bs/3pfcU9qtZoeEeKAM3T2pduK7OVUV64jflHQyXK0NBgig="
+      - secure: "nK5kN3xf43qNUzQ2e+3hCD1Iy/XzqMS1EOm1aDyvbi1nv4xHD7ZkKTRgFAPYGJj/SpuSkIlWbFybYUfeGe9SVrg9/C70vlNmmuNkK2YV106qd5IemB65qzVb35yU7kyF84u5/kAHg8EdWfXsBYxB6KoXJoql1lGCYQMaH0L6Rb8="
     on_success: change
     on_failure: change
