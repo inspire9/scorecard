@@ -13,4 +13,8 @@ require 'scorecard/points'
 require 'scorecard/point_rule'
 require 'scorecard/rules'
 require 'scorecard/subscriber'
-require 'scorecard/worker' if defined?(Sidekiq)
+
+if defined?(Sidekiq)
+  require 'scorecard/clear_worker'
+  require 'scorecard/score_worker'
+end

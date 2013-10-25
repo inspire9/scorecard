@@ -1,4 +1,4 @@
-class Scorecard::Worker
+class Scorecard::ScoreWorker
   include Sidekiq::Worker
 
   def perform(context, options)

@@ -15,4 +15,7 @@ Dir["./spec/support/**/*.rb"].each { |file| require file }
 
 RSpec.configure do |config|
   config.use_transactional_fixtures = true
+  config.before :each do
+    Scorecard.rules.clear
+  end
 end

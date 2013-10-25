@@ -13,10 +13,18 @@ class Scorecard::Points
       options.delete prefix
     end
 
-    Scorecard::Worker.perform_async context, options.stringify_keys
+    Scorecard::ScoreWorker.perform_async context, options.stringify_keys
   end
 
   def self.for(user)
     Scorecard::Point.for_user(user).sum(:amount)
+  end
+
+  def self.clear(gameable)
+    Scorecard::Point.for_gameable(gameable).each &:destroy
+  end
+
+  def self.clear_async(gameable)
+    Scorecard::ClearWorker.perform_async gameable.class.name, gameable.id
   end
 end

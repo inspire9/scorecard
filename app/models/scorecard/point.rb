@@ -23,6 +23,10 @@ class Scorecard::Point < ActiveRecord::Base
     where user_id: user.id, user_type: user.class.name
   end
 
+  def self.for_gameable(gameable)
+    where gameable_id: gameable.id, gameable_type: gameable.class.name
+  end
+
   def self.for_user_in_timeframe(context, user, timeframe)
     for_context(context).for_user(user).where(created_at: timeframe)
   end
