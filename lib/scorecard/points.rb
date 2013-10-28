@@ -28,6 +28,7 @@ class Scorecard::Points
   end
 
   def self.clear_async(gameable)
-    Scorecard::ClearWorker.perform_async gameable.class.name, gameable.id
+    Scorecard::ClearWorker.perform_in 10.seconds, gameable.class.name,
+      gameable.id
   end
 end
