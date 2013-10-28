@@ -1,4 +1,6 @@
 module Scorecard
+  mattr_accessor :levels
+
   def self.configure
     yield self
   end
@@ -9,6 +11,7 @@ module Scorecard
 end
 
 require 'scorecard/engine'
+require 'scorecard/levels'
 require 'scorecard/points'
 require 'scorecard/point_rule'
 require 'scorecard/rules'
