@@ -27,5 +27,20 @@ describe 'Clearing Points' do
 
     Scorecard::Points.for(user).should == 0
   end
+
+  it "fires a generic notification" do
+    fired = false
+
+    subscriber = ActiveSupport::Notifications.subscribe 'scorecard' do |*args|
+      event = ActiveSupport::Notifications::Event.new(*args)
+      fired = (event.payload[:user] == user)
+    end
+
+    Scorecard::Points.clear_async(post)
+
+    ActiveSupport::Notifications.unsubscribe(subscriber)
+
+    fired.should be_true
+  end
 end
 

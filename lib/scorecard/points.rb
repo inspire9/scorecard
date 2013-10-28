@@ -21,7 +21,10 @@ class Scorecard::Points
   end
 
   def self.clear(gameable)
-    Scorecard::Point.for_gameable(gameable).each &:destroy
+    Scorecard::Point.for_gameable(gameable).each do |point|
+      point.destroy
+      ActiveSupport::Notifications.instrument 'scorecard', user: point.user
+    end
   end
 
   def self.clear_async(gameable)

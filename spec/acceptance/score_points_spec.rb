@@ -105,4 +105,24 @@ describe 'Scoring points' do
       gameable_type: 'User'
     ).should_not be_empty
   end
+
+  it "fires a generic notification" do
+    Scorecard.configure do |config|
+      config.rules.add_rule_for_points :new_post, 50
+    end
+
+    fired = false
+    user  = User.create!
+
+    subscriber = ActiveSupport::Notifications.subscribe 'scorecard' do |*args|
+      event = ActiveSupport::Notifications::Event.new(*args)
+      fired = (event.payload[:user] == user)
+    end
+
+    post = Post.create! user: user
+
+    ActiveSupport::Notifications.unsubscribe(subscriber)
+
+    fired.should be_true
+  end
 end

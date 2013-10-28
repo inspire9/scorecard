@@ -22,8 +22,11 @@ class Scorecard::Subscriber
 
     return unless rule && rule.allowed?(event.payload)
 
-    Scorecard::Point.create(
+    point = Scorecard::Point.create(
       event.payload.slice(:context, :amount, :identifier, :user, :gameable)
     )
+    ActiveSupport::Notifications.instrument(
+      'scorecard', user: event.payload[:user]
+    ) if point.persisted?
   end
 end
