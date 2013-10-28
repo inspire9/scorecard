@@ -78,7 +78,7 @@ Scorecard::Scorer.points_async :new_post, gameable: post
 Whenever you want to recalculate a user's level, run the following:
 
 ```ruby
-Scorecard::Levels.calculate_and_store user
+Scorecard::Scorer.level user
 ```
 
 ## Results

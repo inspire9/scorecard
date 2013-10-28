@@ -11,13 +11,8 @@ describe 'Levels' do
     end
   end
 
-  it 'uses the provided option for level calculation' do
-    expect(Scorecard::Levels.calculate(User.new(email: 'pat-old'))).to eq(2)
-    expect(Scorecard::Levels.calculate(User.new(email: 'pat-new'))).to eq(1)
-  end
-
   it "saves the score for the user" do
-    Scorecard::Levels.calculate_and_store user
+    Scorecard::Scorer.level user
 
     level = Scorecard::Level.where(user_id: user.id, user_type: 'User').first
     expect(level.amount).to eq(1)
@@ -31,7 +26,7 @@ describe 'Levels' do
       fired = (event.payload[:user] == user)
     end
 
-    Scorecard::Levels.calculate_and_store user
+    Scorecard::Scorer.level user
 
     ActiveSupport::Notifications.unsubscribe(subscriber)
 
@@ -39,7 +34,7 @@ describe 'Levels' do
   end
 
   it "fires a level notification when the level is changed" do
-    Scorecard::Levels.calculate_and_store user
+    Scorecard::Scorer.level user
     user.update_attributes(email: 'pat-old')
 
     fired = false
@@ -49,7 +44,7 @@ describe 'Levels' do
       fired = (event.payload[:user] == user)
     end
 
-    Scorecard::Levels.calculate_and_store user
+    Scorecard::Scorer.level user
 
     ActiveSupport::Notifications.unsubscribe(subscriber)
 
@@ -57,7 +52,7 @@ describe 'Levels' do
   end
 
   it "does not fire a notification when the level remains the same" do
-    Scorecard::Levels.calculate_and_store user
+    Scorecard::Scorer.level user
 
     fired = false
 
@@ -66,7 +61,7 @@ describe 'Levels' do
       fired = (event.payload[:user] == user)
     end
 
-    Scorecard::Levels.calculate_and_store user
+    Scorecard::Scorer.level user
 
     ActiveSupport::Notifications.unsubscribe(subscriber)
 
@@ -74,7 +69,7 @@ describe 'Levels' do
   end
 
   it "retrieves stored level for a user" do
-    Scorecard::Levels.calculate_and_store user
+    Scorecard::Scorer.level user
 
     expect(Scorecard::Levels.for(user)).to eq(1)
   end
