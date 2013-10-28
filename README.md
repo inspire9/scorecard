@@ -24,7 +24,7 @@ In an initializer, define the events that points are tied to - with a unique con
 
 ```ruby
 Scorecard.configure do |config|
-  config.rules.add_rule_for_points :new_post, 50
+  config.rules.add_rule :new_post, 50
 end
 ```
 
@@ -32,7 +32,7 @@ You can also provide a block with logic for whether to award the points, the max
 
 ```ruby
 Scorecard.configure do |config|
-  config.rules.add_rule_for_points :new_post, 50, limit: 100, timeframe: :day,
+  config.rules.add_rule :new_post, 50, limit: 100, timeframe: :day,
   if: lambda { |payload| payload[:user].posts.count <= 1 }
 end
 ```

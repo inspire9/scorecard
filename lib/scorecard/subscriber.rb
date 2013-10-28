@@ -14,7 +14,7 @@ class Scorecard::Subscriber
   end
 
   def points(event)
-    rule = Scorecard.rules.find_rule_for_points event.payload[:context]
+    rule = Scorecard.rules.find_rule event.payload[:context]
 
     event.payload[:amount]     ||= rule.amount
     event.payload[:identifier] ||= event.payload[:gameable].id

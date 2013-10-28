@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'Scoring points' do
   it "stores points for configured behaviour" do
     Scorecard.configure do |config|
-      config.rules.add_rule_for_points :new_post, 50
+      config.rules.add_rule :new_post, 50
     end
 
     user = User.create!
@@ -22,7 +22,7 @@ describe 'Scoring points' do
 
   it "only stores points when provided logic passes" do
     Scorecard.configure do |config|
-      config.rules.add_rule_for_points :new_post, 50,
+      config.rules.add_rule :new_post, 50,
         if: lambda { |payload| Post.count <= 1 }
     end
 
@@ -38,7 +38,7 @@ describe 'Scoring points' do
 
   it "does not double-up on points for the same event" do
     Scorecard.configure do |config|
-      config.rules.add_rule_for_points :new_post, 50
+      config.rules.add_rule :new_post, 50
     end
 
     user = User.create!
@@ -58,7 +58,7 @@ describe 'Scoring points' do
 
   it "respects limit options" do
     Scorecard.configure do |config|
-      config.rules.add_rule_for_points :new_post, 50, limit: 100
+      config.rules.add_rule :new_post, 50, limit: 100
     end
 
     user = User.create!
@@ -74,7 +74,7 @@ describe 'Scoring points' do
 
   it "respects timeframe options" do
     Scorecard.configure do |config|
-      config.rules.add_rule_for_points :new_post, 50, timeframe: :day
+      config.rules.add_rule :new_post, 50, timeframe: :day
     end
 
     user = User.create!
@@ -89,7 +89,7 @@ describe 'Scoring points' do
 
   it "allows for processing via Sidekiq" do
     Scorecard.configure do |config|
-      config.rules.add_rule_for_points :new_user, 20
+      config.rules.add_rule :new_user, 20
     end
 
     user = User.create!
@@ -108,7 +108,7 @@ describe 'Scoring points' do
 
   it "fires a generic notification" do
     Scorecard.configure do |config|
-      config.rules.add_rule_for_points :new_post, 50
+      config.rules.add_rule :new_post, 50
     end
 
     fired = false
