@@ -9,6 +9,6 @@ class Scorecard::ScoreWorker
       options[prefix] = klass.find options.delete("#{prefix}_id")
     end
 
-    Scorecard::Points.score context.to_sym, options.symbolize_keys
+    Scorecard::Scorer.points context.to_sym, options.symbolize_keys
   end
 end

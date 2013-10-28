@@ -43,7 +43,7 @@ describe 'Scoring points' do
 
     user = User.create!
     post = Post.create! user: user
-    Scorecard::Points.score :new_post, gameable: post
+    Scorecard::Scorer.points :new_post, gameable: post
 
     Scorecard::Point.where(
       context:       'new_post',
@@ -93,7 +93,7 @@ describe 'Scoring points' do
     end
 
     user = User.create!
-    Scorecard::Points.score_async :new_user, gameable: user, user: user
+    Scorecard::Scorer.points_async :new_user, gameable: user, user: user
 
     Scorecard::Point.where(
       context:       'new_user',

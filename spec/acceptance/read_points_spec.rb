@@ -9,7 +9,7 @@ describe 'Reading points' do
 
     user = User.create!
     post = Post.create! user: user
-    Scorecard::Points.score :new_user, gameable: user, user: user
+    Scorecard::Scorer.points :new_user, gameable: user, user: user
 
     Scorecard::Points.for(user).should == 50
   end

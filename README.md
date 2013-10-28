@@ -60,19 +60,19 @@ end
 And then, when you want to fire those events, use code much like the following:
 
 ```ruby
-Scorecard::Points.score :new_post, gameable: post
+Scorecard::Scorer.points :new_post, gameable: post
 ```
 
 This presumes that the user the points are for is a method on the gameable object. If that's not the case, you can pass in a custom user:
 
 ```ruby
-Scorecard::Points.score :new_post, gameable: post, user: user
+Scorecard::Scorer.points :new_post, gameable: post, user: user
 ```
 
 If you're using Sidekiq, you can push the scoring behaviour into a background worker using `score_async` instead. Make sure `scorecard` is listed below `sidekiq` in your `Gemfile`.
 
 ```ruby
-Scorecard::Points.score_async :new_post, gameable: post
+Scorecard::Scorer.points_async :new_post, gameable: post
 ```
 
 Whenever you want to recalculate a user's level, run the following:

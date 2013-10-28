@@ -15,6 +15,7 @@ require 'scorecard/levels'
 require 'scorecard/points'
 require 'scorecard/point_rule'
 require 'scorecard/rules'
+require 'scorecard/scorer'
 require 'scorecard/subscriber'
 
 if defined?(Sidekiq)
