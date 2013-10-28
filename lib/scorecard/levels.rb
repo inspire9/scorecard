@@ -11,4 +11,9 @@ class Scorecard::Levels
     level.save
     ActiveSupport::Notifications.instrument 'level.scorecard', user: user
   end
+
+  def self.for(user)
+    level = Scorecard::Level.for_user(user)
+    level.nil? ? calculate(user) : level.amount
+  end
 end

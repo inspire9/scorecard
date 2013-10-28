@@ -72,4 +72,10 @@ describe 'Levels' do
 
     expect(fired).to be_false
   end
+
+  it "retrieves stored level for a user" do
+    Scorecard::Levels.calculate_and_store user
+
+    expect(Scorecard::Levels.for(user)).to eq(1)
+  end
 end

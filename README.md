@@ -23,17 +23,37 @@ Then, add the migrations to your app and update your database accordingly:
 In an initializer, define the events that points are tied to - with a unique context and the number of points:
 
 ```ruby
-Scorecard::PointRule.new :new_post, 50
+Scorecard.configure do |config|
+  config.rules.add_rule_for_points :new_post, 50
+end
 ```
 
 You can also provide a block with logic for whether to award the points, the maximum number of points allowed to be awarded for this rule, and the timeframe for that limit:
 
 ```ruby
-Scorecard::PointRule.new :new_post, 50, limit: 100, timeframe: :day,
+Scorecard.configure do |config|
+  config.rules.add_rule_for_points :new_post, 50, limit: 100, timeframe: :day,
   if: lambda { |payload| payload[:user].posts.count <= 1 }
+end
 ```
 
 The payload object contains the context plus every option you send through to `score` call (see below).
+
+For levels, you can set the central piece of logic that calculates the user's current level in the initializer as well:
+
+```ruby
+Scorecard.configure do |config|
+  config.levels = lambda { |user|
+    if user.created_at > 2.years.ago
+      3
+    elsif user.created_at > 1.year.ago
+      2
+    else
+      1
+    end
+  }
+end
+```
 
 ## Scoring
 
@@ -55,12 +75,24 @@ If you're using Sidekiq, you can push the scoring behaviour into a background wo
 Scorecard::Points.score_async :new_post, gameable: post
 ```
 
+Whenever you want to recalculate a user's level, run the following:
+
+```ruby
+Scorecard::Levels.calculate_and_store user
+```
+
 ## Results
 
 To get the current points count for a given user:
 
 ```ruby
 Scorecard::Points.for user
+```
+
+And the current level:
+
+```ruby
+Scorecard::Levels.for user
 ```
 
 ## Contributing
