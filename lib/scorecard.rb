@@ -11,8 +11,8 @@ module Scorecard
 end
 
 require 'scorecard/card'
+require 'scorecard/cleaner'
 require 'scorecard/engine'
-require 'scorecard/points'
 require 'scorecard/point_rule'
 require 'scorecard/rules'
 require 'scorecard/scorer'

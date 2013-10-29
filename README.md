@@ -81,6 +81,12 @@ Whenever you want to recalculate a user's level, run the following:
 Scorecard::Scorer.level user
 ```
 
+To remove points related to a given gameable object, you can use the Scorecard::Cleaner class:
+
+```ruby
+Scorecard::Cleaner.points post
+```
+
 ## Results
 
 To get the current points count for a given user:

@@ -15,7 +15,7 @@ describe 'Clearing Points' do
   it 'removes points for a given gameable object' do
     expect(Scorecard::Card.new(user).points).to eq(50)
 
-    Scorecard::Points.clear(post)
+    Scorecard::Cleaner.points(post)
 
     expect(Scorecard::Card.new(user).points).to eq(0)
   end
@@ -23,7 +23,7 @@ describe 'Clearing Points' do
   it 'clears points via Sidekiq' do
     expect(Scorecard::Card.new(user).points).to eq(50)
 
-    Scorecard::Points.clear_async(post)
+    Scorecard::Cleaner.points_async(post)
 
     expect(Scorecard::Card.new(user).points).to eq(0)
   end
@@ -36,7 +36,7 @@ describe 'Clearing Points' do
       fired = (event.payload[:user] == user)
     end
 
-    Scorecard::Points.clear_async(post)
+    Scorecard::Cleaner.points_async(post)
 
     ActiveSupport::Notifications.unsubscribe(subscriber)
 
