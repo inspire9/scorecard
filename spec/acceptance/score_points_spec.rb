@@ -9,7 +9,7 @@ describe 'Scoring points' do
     user = User.create!
     post = Post.create! user: user
 
-    Scorecard::Point.where(
+    points = Scorecard::Point.where(
       context:       'new_post',
       amount:        50,
       identifier:    post.id.to_s,
@@ -17,7 +17,8 @@ describe 'Scoring points' do
       user_type:     'User',
       gameable_id:   post.id,
       gameable_type: 'Post'
-    ).should_not be_empty
+    )
+    expect(points).to_not be_empty
   end
 
   it "only stores points when provided logic passes" do
@@ -30,10 +31,11 @@ describe 'Scoring points' do
     post = Post.create! user: user
     post = Post.create! user: user
 
-    Scorecard::Point.where(
+    count = Scorecard::Point.where(
       context: 'new_post',
       amount:  50
-    ).count.should == 1
+    ).count
+    expect(count).to eq(1)
   end
 
   it "does not double-up on points for the same event" do
@@ -45,7 +47,7 @@ describe 'Scoring points' do
     post = Post.create! user: user
     Scorecard::Scorer.points :new_post, gameable: post
 
-    Scorecard::Point.where(
+    count = Scorecard::Point.where(
       context:       'new_post',
       amount:        50,
       identifier:    post.id.to_s,
@@ -53,7 +55,8 @@ describe 'Scoring points' do
       user_type:     'User',
       gameable_id:   post.id,
       gameable_type: 'Post'
-    ).count.should == 1
+    ).count
+    expect(count).to eq(1)
   end
 
   it "respects limit options" do
@@ -66,10 +69,8 @@ describe 'Scoring points' do
     post = Post.create! user: user
     post = Post.create! user: user
 
-    Scorecard::Point.where(
-      context: 'new_post',
-      amount:  50
-    ).count.should == 2
+    count = Scorecard::Point.where(context: 'new_post', amount: 50).count
+    expect(count).to eq(2)
   end
 
   it "respects timeframe options" do
@@ -81,10 +82,8 @@ describe 'Scoring points' do
     post = Post.create! user: user
     post = Post.create! user: user
 
-    Scorecard::Point.where(
-      context: 'new_post',
-      amount:  50
-    ).count.should == 1
+    count = Scorecard::Point.where(context: 'new_post', amount: 50).count
+    expect(count).to eq(1)
   end
 
   it "allows for processing via Sidekiq" do
@@ -95,7 +94,7 @@ describe 'Scoring points' do
     user = User.create!
     Scorecard::Scorer.points_async :new_user, gameable: user, user: user
 
-    Scorecard::Point.where(
+    points = Scorecard::Point.where(
       context:       'new_user',
       amount:        20,
       identifier:    user.id.to_s,
@@ -103,7 +102,8 @@ describe 'Scoring points' do
       user_type:     'User',
       gameable_id:   user.id,
       gameable_type: 'User'
-    ).should_not be_empty
+    )
+    expect(points).to_not be_empty
   end
 
   it "fires a generic notification" do
@@ -123,6 +123,6 @@ describe 'Scoring points' do
 
     ActiveSupport::Notifications.unsubscribe(subscriber)
 
-    fired.should be_true
+    expect(fired).to be_true
   end
 end

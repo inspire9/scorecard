@@ -13,19 +13,19 @@ describe 'Clearing Points' do
   end
 
   it 'removes points for a given gameable object' do
-    Scorecard::Card.new(user).points.should == 50
+    expect(Scorecard::Card.new(user).points).to eq(50)
 
     Scorecard::Points.clear(post)
 
-    Scorecard::Card.new(user).points.should == 0
+    expect(Scorecard::Card.new(user).points).to eq(0)
   end
 
   it 'clears points via Sidekiq' do
-    Scorecard::Card.new(user).points.should == 50
+    expect(Scorecard::Card.new(user).points).to eq(50)
 
     Scorecard::Points.clear_async(post)
 
-    Scorecard::Card.new(user).points.should == 0
+    expect(Scorecard::Card.new(user).points).to eq(0)
   end
 
   it "fires a generic notification" do
@@ -40,7 +40,7 @@ describe 'Clearing Points' do
 
     ActiveSupport::Notifications.unsubscribe(subscriber)
 
-    fired.should be_true
+    expect(fired).to be_true
   end
 end
 
