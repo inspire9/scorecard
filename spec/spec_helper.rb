@@ -17,5 +17,6 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
   config.before :each do
     Scorecard.rules.clear
+    Scorecard.badges.clear
   end
 end

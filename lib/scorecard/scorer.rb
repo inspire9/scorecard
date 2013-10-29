@@ -1,4 +1,9 @@
 class Scorecard::Scorer
+  def self.badge(identifier, user)
+    ActiveSupport::Notifications.instrument 'badge.scorecard',
+      badge: identifier, user: user
+  end
+
   def self.level(user)
     level = Scorecard::Level.for_user(user) || Scorecard::Level.new(user: user)
     level.amount = Scorecard.levels.call user

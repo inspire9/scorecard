@@ -13,6 +13,19 @@ class Scorecard::Subscriber
     send method, ActiveSupport::Notifications::Event.new(message, *args)
   end
 
+  def badge(event)
+    badge    = Scorecard.badges.find event.payload[:badge]
+    existing = Scorecard::UserBadge.for badge.identifier, event.payload[:user]
+    return unless existing.empty?
+
+    event.payload[:gameable]   ||= event.payload[:user]
+    event.payload[:identifier] ||= event.payload[:gameable].id
+
+    Scorecard::UserBadge.create(
+      event.payload.slice(:badge, :gameable, :user, :identifier)
+    )
+  end
+
   def points(event)
     rule = Scorecard.rules.find event.payload[:context]
 

@@ -5,6 +5,12 @@ class Scorecard::Card
     @user = user
   end
 
+  def badges
+    @badges ||= Scorecard::UserBadge.for_user(user).collect { |user_badge|
+      Scorecard.badges.find user_badge.badge.to_sym
+    }
+  end
+
   def level
     @level ||= begin
       record = Scorecard::Level.for_user(user)

@@ -5,11 +5,17 @@ module Scorecard
     yield self
   end
 
+  def self.badges
+    @badges ||= Scorecard::Badges.new
+  end
+
   def self.rules
     @rules ||= Scorecard::Rules.new
   end
 end
 
+require 'scorecard/badge'
+require 'scorecard/badges'
 require 'scorecard/card'
 require 'scorecard/cleaner'
 require 'scorecard/engine'
