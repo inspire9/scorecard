@@ -5,11 +5,11 @@ class Scorecard::Rules
     @point_rules = []
   end
 
-  def add_rule(context, amount, options = {})
+  def add(context, amount, options = {})
     point_rules << Scorecard::PointRule.new(context, amount, options)
   end
 
-  def find_rule(context)
+  def find(context)
     point_rules.detect { |rule| rule.context == context }
   end
 

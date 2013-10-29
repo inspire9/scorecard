@@ -6,7 +6,7 @@ describe 'Clearing Points' do
 
   before :each do
     Scorecard.configure do |config|
-      config.rules.add_rule :new_post, 50
+      config.rules.add :new_post, 50
     end
 
     post
