@@ -16,7 +16,7 @@ class Scorecard::Subscriber
   def badge(event)
     badge    = Scorecard.badges.find event.payload[:badge]
     existing = Scorecard::UserBadge.for badge.identifier, event.payload[:user]
-    return unless existing.empty?
+    return unless existing.empty? || badge.repeatable?
 
     event.payload[:gameable]   ||= event.payload[:user]
     event.payload[:identifier] ||= event.payload[:gameable].id
@@ -28,6 +28,7 @@ class Scorecard::Subscriber
 
   def points(event)
     rule = Scorecard.rules.find event.payload[:context]
+    return if rule.nil?
 
     event.payload[:amount]     ||= rule.amount
     event.payload[:identifier] ||= event.payload[:gameable].id

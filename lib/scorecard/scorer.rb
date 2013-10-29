@@ -1,7 +1,7 @@
 class Scorecard::Scorer
-  def self.badge(identifier, user)
+  def self.badge(identifier, options)
     ActiveSupport::Notifications.instrument 'badge.scorecard',
-      badge: identifier, user: user
+      options.merge(badge: identifier)
   end
 
   def self.level(user)

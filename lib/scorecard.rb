@@ -14,6 +14,7 @@ module Scorecard
   end
 end
 
+require 'scorecard/applied_badge'
 require 'scorecard/badge'
 require 'scorecard/badges'
 require 'scorecard/card'

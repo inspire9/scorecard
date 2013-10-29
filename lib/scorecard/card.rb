@@ -6,9 +6,12 @@ class Scorecard::Card
   end
 
   def badges
-    @badges ||= Scorecard::UserBadge.for_user(user).collect { |user_badge|
-      Scorecard.badges.find user_badge.badge.to_sym
-    }
+    @badges ||= begin
+      identifiers = Scorecard::UserBadge.for_user(user).pluck(:badge).uniq
+      identifiers.collect { |identifier|
+        Scorecard::AppliedBadge.new identifier.to_sym, user
+      }
+    end
   end
 
   def level
