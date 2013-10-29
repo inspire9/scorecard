@@ -11,6 +11,6 @@ describe 'Reading points' do
     post = Post.create! user: user
     Scorecard::Scorer.points :new_user, gameable: user, user: user
 
-    Scorecard::Points.for(user).should == 50
+    Scorecard::Card.new(user).points.should == 50
   end
 end

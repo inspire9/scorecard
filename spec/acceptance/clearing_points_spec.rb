@@ -13,19 +13,19 @@ describe 'Clearing Points' do
   end
 
   it 'removes points for a given gameable object' do
-    Scorecard::Points.for(user).should == 50
+    Scorecard::Card.new(user).points.should == 50
 
     Scorecard::Points.clear(post)
 
-    Scorecard::Points.for(user).should == 0
+    Scorecard::Card.new(user).points.should == 0
   end
 
   it 'clears points via Sidekiq' do
-    Scorecard::Points.for(user).should == 50
+    Scorecard::Card.new(user).points.should == 50
 
     Scorecard::Points.clear_async(post)
 
-    Scorecard::Points.for(user).should == 0
+    Scorecard::Card.new(user).points.should == 0
   end
 
   it "fires a generic notification" do

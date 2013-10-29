@@ -71,6 +71,6 @@ describe 'Levels' do
   it "retrieves stored level for a user" do
     Scorecard::Scorer.level user
 
-    expect(Scorecard::Levels.for(user)).to eq(1)
+    expect(Scorecard::Card.new(user).level).to eq(1)
   end
 end

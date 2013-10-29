@@ -1,8 +1,4 @@
 class Scorecard::Points
-  def self.for(user)
-    Scorecard::Point.for_user(user).sum(:amount)
-  end
-
   def self.clear(gameable)
     Scorecard::Point.for_gameable(gameable).each do |point|
       point.destroy

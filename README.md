@@ -86,13 +86,13 @@ Scorecard::Scorer.level user
 To get the current points count for a given user:
 
 ```ruby
-Scorecard::Points.for user
+Scorecard::Card.new(user).points
 ```
 
 And the current level:
 
 ```ruby
-Scorecard::Levels.for user
+Scorecard::Card.new(user).level
 ```
 
 ## Contributing

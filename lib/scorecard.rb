@@ -10,8 +10,8 @@ module Scorecard
   end
 end
 
+require 'scorecard/card'
 require 'scorecard/engine'
-require 'scorecard/levels'
 require 'scorecard/points'
 require 'scorecard/point_rule'
 require 'scorecard/rules'
