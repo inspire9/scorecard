@@ -4,6 +4,11 @@ class Scorecard::Scorer
       options.merge(badge: identifier)
   end
 
+  def self.badge_async(identifier, options)
+    Scorecard::BadgeWorker.perform_async identifier,
+      Scorecard::Parameters.new(options).expand
+  end
+
   def self.level(user)
     level = Scorecard::Level.for_user(user) || Scorecard::Level.new(user: user)
     level.amount = Scorecard.levels.call user
@@ -19,14 +24,7 @@ class Scorecard::Scorer
   end
 
   def self.points_async(context, options)
-    [:gameable, :user].each do |prefix|
-      next unless options[prefix]
-
-      options["#{prefix}_id"]   = options[prefix].id
-      options["#{prefix}_type"] = options[prefix].class.name
-      options.delete prefix
-    end
-
-    Scorecard::ScoreWorker.perform_async context, options.stringify_keys
+    Scorecard::ScoreWorker.perform_async context,
+      Scorecard::Parameters.new(options).expand
   end
 end

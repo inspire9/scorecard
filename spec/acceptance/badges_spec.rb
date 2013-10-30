@@ -68,4 +68,18 @@ describe 'Badges' do
     expect(badge.name).to eq('Beginner')
     expect(badge.count).to eq(2)
   end
+
+  it 'assigns badges to users via Sidekiq' do
+    Scorecard.configure do |config|
+      config.badges.add :new_user do |badge|
+        badge.name     = 'Beginner'
+        badge.locked   = 'Sign up'
+        badge.unlocked = 'You signed up!'
+      end
+    end
+
+    Scorecard::Scorer.badge_async :new_user, user: user
+
+    expect(card.badges.collect(&:name)).to eq(['Beginner'])
+  end
 end
