@@ -1,6 +1,6 @@
 class Scorecard::Scorer
   def self.badge(identifier, options)
-    ActiveSupport::Notifications.instrument 'badge.scorecard',
+    ActiveSupport::Notifications.instrument 'badge.internal.scorecard',
       options.merge(badge: identifier)
   end
 
@@ -19,7 +19,7 @@ class Scorecard::Scorer
   end
 
   def self.points(context, options)
-    ActiveSupport::Notifications.instrument 'points.scorecard',
+    ActiveSupport::Notifications.instrument 'points.internal.scorecard',
       options.merge(context: context)
   end
 
