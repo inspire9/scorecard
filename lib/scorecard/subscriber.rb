@@ -21,9 +21,15 @@ class Scorecard::Subscriber
     event.payload[:gameable]   ||= event.payload[:user]
     event.payload[:identifier] ||= event.payload[:gameable].id
 
-    Scorecard::UserBadge.create(
+    user_badge = Scorecard::UserBadge.create(
       event.payload.slice(:badge, :gameable, :user, :identifier)
     )
+    ActiveSupport::Notifications.instrument(
+      'badge.scorecard', user: event.payload[:user],
+      badge: Scorecard::AppliedBadge.new(
+        user_badge.badge.to_sym, user_badge.user
+      )
+    ) if user_badge.persisted?
   end
 
   def points(event)

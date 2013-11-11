@@ -1,7 +1,7 @@
 class Scorecard::AppliedBadge
   attr_accessor :badge, :user
 
-  delegate :name, :locked, :unlocked, :repeatable?, to: :badge
+  delegate :name, :locked, :unlocked, :repeatable?, :identifier, to: :badge
 
   def initialize(identifier, user)
     @user  = user
