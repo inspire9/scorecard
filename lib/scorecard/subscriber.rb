@@ -28,7 +28,8 @@ class Scorecard::Subscriber
       'badge.scorecard', user: event.payload[:user],
       badge: Scorecard::AppliedBadge.new(
         user_badge.badge.to_sym, user_badge.user
-      )
+      ),
+      gameable: event.payload[:gameable]
     ) if user_badge.persisted?
   end
 
