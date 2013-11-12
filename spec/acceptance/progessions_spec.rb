@@ -55,4 +55,10 @@ describe 'Progressions' do
 
     expect(count).to eq(1)
   end
+
+  it 'marks progress for users via Sidekiq' do
+    Scorecard::Scorer.progress_async :add_info, user: user
+
+    expect(card.progress).to eq(10)
+  end
 end
