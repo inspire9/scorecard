@@ -28,13 +28,14 @@ class Scorecard::Scorer
       Scorecard::Parameters.new(options).expand
   end
 
-  def self.progress(identifier, options)
+  def self.progress(options)
     ActiveSupport::Notifications.instrument 'progress.internal.scorecard',
-      options.merge(identifier: identifier)
+      options
   end
 
-  def self.progress_async(identifier, options)
-    Scorecard::ProgressWorker.perform_async identifier,
+  def self.progress_async(options)
+    Scorecard::ProgressWorker.perform_async(
       Scorecard::Parameters.new(options).expand
+    )
   end
 end

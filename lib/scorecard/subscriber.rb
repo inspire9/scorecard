@@ -52,14 +52,24 @@ class Scorecard::Subscriber
   end
 
   def progress(event)
-    progression = Scorecard.progressions.find event.payload[:identifier]
-    return unless progression
+    Scorecard.progressions.each do |progression|
+      if progression.check.call event.payload[:user]
+        progress = Scorecard::Progress.create(
+          user: event.payload[:user], identifier: progression.identifier
+        )
 
-    progress = Scorecard::Progress.create(
-      event.payload.slice(:user, :identifier)
-    )
-    ActiveSupport::Notifications.instrument(
-      'progress.scorecard', user: event.payload[:user]
-    ) if progress.persisted?
+        ActiveSupport::Notifications.instrument(
+          'progress.scorecard', user: event.payload[:user]
+        ) if progress.persisted?
+      else
+        progresses = Scorecard::Progress.for_user(event.payload[:user]).
+          for_identifier(progression.identifier)
+        progresses.each &:destroy
+
+        ActiveSupport::Notifications.instrument(
+          'progress.scorecard', user: event.payload[:user]
+        ) if progresses.any?
+      end
+    end
   end
 end
