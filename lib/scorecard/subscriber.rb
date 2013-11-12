@@ -14,23 +14,7 @@ class Scorecard::Subscriber
   end
 
   def badge(event)
-    badge    = Scorecard.badges.find event.payload[:badge]
-    existing = Scorecard::UserBadge.for badge.identifier, event.payload[:user]
-    return unless existing.empty? || badge.repeatable?
-
-    event.payload[:gameable]   ||= event.payload[:user]
-    event.payload[:identifier] ||= event.payload[:gameable].id
-
-    user_badge = Scorecard::UserBadge.create(
-      event.payload.slice(:badge, :gameable, :user, :identifier)
-    )
-    ActiveSupport::Notifications.instrument(
-      'badge.scorecard', user: event.payload[:user],
-      badge: Scorecard::AppliedBadge.new(
-        user_badge.badge.to_sym, user_badge.user
-      ),
-      gameable: event.payload[:gameable]
-    ) if user_badge.persisted?
+    Scorecard::Badger.update event.payload[:user]
   end
 
   def points(event)
@@ -71,17 +55,5 @@ class Scorecard::Subscriber
         ) if progresses.any?
       end
     end
-  end
-
-  def unbadge(event)
-    badge    = Scorecard.badges.find event.payload[:badge]
-    existing = Scorecard::UserBadge.for badge.identifier, event.payload[:user]
-    return if existing.empty?
-
-    existing.each &:destroy
-
-    ActiveSupport::Notifications.instrument(
-      'unbadge.scorecard', event.payload.slice(:user, :badge)
-    )
   end
 end

@@ -1,12 +1,12 @@
 class Scorecard::Scorer
-  def self.badge(identifier, options)
-    ActiveSupport::Notifications.instrument 'badge.internal.scorecard',
-      options.merge(badge: identifier)
+  def self.badge(options)
+    ActiveSupport::Notifications.instrument 'badge.internal.scorecard', options
   end
 
-  def self.badge_async(identifier, options)
-    Scorecard::BadgeWorker.perform_async identifier,
+  def self.badge_async(options)
+    Scorecard::BadgeWorker.perform_async(
       Scorecard::Parameters.new(options).expand
+    )
   end
 
   def self.level(user)
@@ -37,15 +37,5 @@ class Scorecard::Scorer
     Scorecard::ProgressWorker.perform_async(
       Scorecard::Parameters.new(options).expand
     )
-  end
-
-  def self.unbadge(identifier, options)
-    ActiveSupport::Notifications.instrument 'unbadge.internal.scorecard',
-      options.merge(badge: identifier)
-  end
-
-  def self.unbadge_async(identifier, options)
-    Scorecard::UnbadgeWorker.perform_async identifier,
-      Scorecard::Parameters.new(options).expand
   end
 end

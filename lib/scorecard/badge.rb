@@ -1,16 +1,14 @@
 class Scorecard::Badge
   attr_reader :identifier
-  attr_accessor :name, :locked, :unlocked
-  attr_writer   :repeatable
+  attr_accessor :name, :locked, :unlocked, :check, :gameables
 
   def initialize(identifier, &block)
     @identifier = identifier
-    @repeatable = false
 
     block.call self
   end
 
   def repeatable?
-    @repeatable
+    @gameables.present?
   end
 end

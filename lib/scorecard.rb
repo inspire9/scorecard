@@ -21,6 +21,7 @@ end
 require 'scorecard/applied_badge'
 require 'scorecard/badge'
 require 'scorecard/badge_worker'
+require 'scorecard/badger'
 require 'scorecard/badges'
 require 'scorecard/card'
 require 'scorecard/cleaner'

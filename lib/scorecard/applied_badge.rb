@@ -11,4 +11,8 @@ class Scorecard::AppliedBadge
   def count
     Scorecard::UserBadge.for(badge.identifier, user).count
   end
+
+  def gameables
+    Scorecard::UserBadge.for(badge.identifier, user).collect &:gameable
+  end
 end
