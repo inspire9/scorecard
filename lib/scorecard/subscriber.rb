@@ -72,4 +72,16 @@ class Scorecard::Subscriber
       end
     end
   end
+
+  def unbadge(event)
+    badge    = Scorecard.badges.find event.payload[:badge]
+    existing = Scorecard::UserBadge.for badge.identifier, event.payload[:user]
+    return if existing.empty?
+
+    existing.each &:destroy
+
+    ActiveSupport::Notifications.instrument(
+      'unbadge.scorecard', event.payload.slice(:user, :badge)
+    )
+  end
 end

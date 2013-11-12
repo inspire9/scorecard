@@ -38,4 +38,14 @@ class Scorecard::Scorer
       Scorecard::Parameters.new(options).expand
     )
   end
+
+  def self.unbadge(identifier, options)
+    ActiveSupport::Notifications.instrument 'unbadge.internal.scorecard',
+      options.merge(badge: identifier)
+  end
+
+  def self.unbadge_async(identifier, options)
+    Scorecard::UnbadgeWorker.perform_async identifier,
+      Scorecard::Parameters.new(options).expand
+  end
 end

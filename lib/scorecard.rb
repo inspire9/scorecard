@@ -33,6 +33,7 @@ require 'scorecard/progressions'
 require 'scorecard/rules'
 require 'scorecard/scorer'
 require 'scorecard/subscriber'
+require 'scorecard/unbadge_worker'
 
 if defined?(Sidekiq)
   require 'scorecard/clear_worker'
