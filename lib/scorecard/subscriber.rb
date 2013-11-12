@@ -50,4 +50,16 @@ class Scorecard::Subscriber
       'scorecard', user: event.payload[:user]
     ) if point.persisted?
   end
+
+  def progress(event)
+    progression = Scorecard.progressions.find event.payload[:identifier]
+    return unless progression
+
+    progress = Scorecard::Progress.create(
+      event.payload.slice(:user, :identifier)
+    )
+    ActiveSupport::Notifications.instrument(
+      'progress.scorecard', user: event.payload[:user]
+    ) if progress.persisted?
+  end
 end

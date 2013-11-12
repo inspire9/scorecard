@@ -24,4 +24,8 @@ class Scorecard::Card
   def points
     @points ||= Scorecard::Point.for_user(user).sum(:amount)
   end
+
+  def progress
+    @progress ||= Scorecard::Progress.for_user(user).collect(&:amount).sum
+  end
 end

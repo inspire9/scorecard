@@ -27,4 +27,9 @@ class Scorecard::Scorer
     Scorecard::ScoreWorker.perform_async context,
       Scorecard::Parameters.new(options).expand
   end
+
+  def self.progress(identifier, options)
+    ActiveSupport::Notifications.instrument 'progress.internal.scorecard',
+      options.merge(identifier: identifier)
+  end
 end
