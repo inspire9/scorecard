@@ -28,4 +28,11 @@ class Scorecard::Card
   def progress
     @progress ||= Scorecard::Progress.for_user(user).collect(&:amount).sum
   end
+
+  def remaining_progressions
+    @remaining_progressions ||= Scorecard.progressions.without(
+      Scorecard::Progress.for_user(user).collect(&:identifier).
+        collect(&:to_sym)
+    )
+  end
 end

@@ -19,6 +19,12 @@ class Scorecard::Progressions
     progressions.detect { |progression| progression.identifier == identifier }
   end
 
+  def without(identifiers)
+    progressions.reject { |progression|
+      identifiers.include?(progression.identifier)
+    }
+  end
+
   def clear
     progressions.clear
   end
