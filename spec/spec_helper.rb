@@ -18,5 +18,6 @@ RSpec.configure do |config|
   config.before :each do
     Scorecard.rules.clear
     Scorecard.badges.clear
+    Scorecard.progressions.clear
   end
 end

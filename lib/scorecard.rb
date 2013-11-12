@@ -9,6 +9,10 @@ module Scorecard
     @badges ||= Scorecard::Badges.new
   end
 
+  def self.progressions
+    @progressions ||= Scorecard::Progressions.new
+  end
+
   def self.rules
     @rules ||= Scorecard::Rules.new
   end
@@ -23,6 +27,8 @@ require 'scorecard/cleaner'
 require 'scorecard/engine'
 require 'scorecard/parameters'
 require 'scorecard/point_rule'
+require 'scorecard/progression'
+require 'scorecard/progressions'
 require 'scorecard/rules'
 require 'scorecard/scorer'
 require 'scorecard/subscriber'
