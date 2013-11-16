@@ -15,6 +15,9 @@ class Scorecard::Point < ActiveRecord::Base
   validates :amount,     presence: true
   validates :user,       presence: true
 
+  scope :chronological, -> { order('created_at ASC') }
+  scope :reverse,       -> { order('created_at DESC') }
+
   def self.for_context(context)
     where context: context
   end
