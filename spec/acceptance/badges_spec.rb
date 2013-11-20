@@ -19,7 +19,7 @@ describe 'Badges' do
   end
 
   it 'assigns badges to users' do
-    Scorecard::Scorer.badge user: user
+    Scorecard::Scorer.refresh user: user
 
     expect(card.badges.collect(&:name)).to eq(['Beginner'])
   end
@@ -32,7 +32,7 @@ describe 'Badges' do
       fired = (payload[:user] == user) && (payload[:badge].identifier == :new_post)
     end
 
-    Scorecard::Scorer.badge user: user
+    Scorecard::Scorer.refresh user: user
 
     ActiveSupport::Notifications.unsubscribe(subscriber)
 
@@ -40,8 +40,8 @@ describe 'Badges' do
   end
 
   it "doesn't repeat badges with different identifiers" do
-    Scorecard::Scorer.badge user: user
-    Scorecard::Scorer.badge user: user
+    Scorecard::Scorer.refresh user: user
+    Scorecard::Scorer.refresh user: user
 
     expect(card.badges.collect(&:name)).to eq(['Beginner'])
   end
@@ -53,8 +53,8 @@ describe 'Badges' do
       count += 1
     end
 
-    Scorecard::Scorer.badge user: user
-    Scorecard::Scorer.badge user: user
+    Scorecard::Scorer.refresh user: user
+    Scorecard::Scorer.refresh user: user
 
     ActiveSupport::Notifications.unsubscribe(subscriber)
 
@@ -67,7 +67,7 @@ describe 'Badges' do
     }
     second = Post.create! user: user
 
-    Scorecard::Scorer.badge user: user
+    Scorecard::Scorer.refresh user: user
 
     badge = card.badges.first
     expect(badge.name).to eq('Beginner')
@@ -87,7 +87,7 @@ describe 'Badges' do
       count += 1
     end
 
-    Scorecard::Scorer.badge user: user
+    Scorecard::Scorer.refresh user: user
 
     ActiveSupport::Notifications.unsubscribe(subscriber)
 
@@ -95,7 +95,7 @@ describe 'Badges' do
   end
 
   it 'assigns badges to users via Sidekiq' do
-    Scorecard::Scorer.badge_async user: user
+    Scorecard::Scorer.refresh_async user: user
 
     expect(card.badges.collect(&:name)).to eq(['Beginner'])
   end

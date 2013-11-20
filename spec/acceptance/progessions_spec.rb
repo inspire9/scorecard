@@ -15,7 +15,7 @@ describe 'Progressions' do
   end
 
   it 'marks progress for users' do
-    Scorecard::Scorer.progress user: user
+    Scorecard::Scorer.refresh user: user
 
     expect(card.progress).to eq(10)
   end
@@ -28,7 +28,7 @@ describe 'Progressions' do
       fired = (payload[:user] == user)
     end
 
-    Scorecard::Scorer.progress user: user
+    Scorecard::Scorer.refresh user: user
 
     ActiveSupport::Notifications.unsubscribe(subscriber)
 
@@ -36,8 +36,8 @@ describe 'Progressions' do
   end
 
   it "doesn't duplicate progress" do
-    Scorecard::Scorer.progress user: user
-    Scorecard::Scorer.progress user: user
+    Scorecard::Scorer.refresh user: user
+    Scorecard::Scorer.refresh user: user
 
     expect(card.progress).to eq(10)
   end
@@ -49,8 +49,8 @@ describe 'Progressions' do
       count += 1
     end
 
-    Scorecard::Scorer.progress user: user
-    Scorecard::Scorer.progress user: user
+    Scorecard::Scorer.refresh user: user
+    Scorecard::Scorer.refresh user: user
 
     ActiveSupport::Notifications.unsubscribe(subscriber)
 
@@ -58,19 +58,19 @@ describe 'Progressions' do
   end
 
   it 'marks progress for users via Sidekiq' do
-    Scorecard::Scorer.progress_async user: user
+    Scorecard::Scorer.refresh_async user: user
 
     expect(card.progress).to eq(10)
   end
 
   it "removes percentage if progression no longer applies" do
-    Scorecard::Scorer.progress user: user
+    Scorecard::Scorer.refresh user: user
 
     expect(card.progress).to eq(10)
 
     Scorecard.progressions.find(:add_info).check = lambda { |user| false }
 
-    Scorecard::Scorer.progress_async user: user
+    Scorecard::Scorer.refresh_async user: user
 
     card = Scorecard::Card.new user
     expect(card.progress).to eq(0)

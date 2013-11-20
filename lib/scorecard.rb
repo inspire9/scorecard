@@ -20,7 +20,6 @@ end
 
 require 'scorecard/applied_badge'
 require 'scorecard/badge'
-require 'scorecard/badge_worker'
 require 'scorecard/badger'
 require 'scorecard/badges'
 require 'scorecard/card'
@@ -28,13 +27,12 @@ require 'scorecard/cleaner'
 require 'scorecard/engine'
 require 'scorecard/parameters'
 require 'scorecard/point_rule'
-require 'scorecard/progress_worker'
 require 'scorecard/progression'
 require 'scorecard/progressions'
+require 'scorecard/refresh_worker'
 require 'scorecard/rules'
 require 'scorecard/scorer'
 require 'scorecard/subscriber'
-require 'scorecard/unbadge_worker'
 
 if defined?(Sidekiq)
   require 'scorecard/clear_worker'

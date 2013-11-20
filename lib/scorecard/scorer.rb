@@ -1,14 +1,4 @@
 class Scorecard::Scorer
-  def self.badge(options)
-    ActiveSupport::Notifications.instrument 'badge.internal.scorecard', options
-  end
-
-  def self.badge_async(options)
-    Scorecard::BadgeWorker.perform_async(
-      Scorecard::Parameters.new(options).expand
-    )
-  end
-
   def self.level(user)
     level = Scorecard::Level.for_user(user) || Scorecard::Level.new(user: user)
     level.amount = Scorecard.levels.call user
@@ -28,13 +18,15 @@ class Scorecard::Scorer
       Scorecard::Parameters.new(options).expand
   end
 
-  def self.progress(options)
+  def self.refresh(options)
     ActiveSupport::Notifications.instrument 'progress.internal.scorecard',
+      options
+    ActiveSupport::Notifications.instrument 'badge.internal.scorecard',
       options
   end
 
-  def self.progress_async(options)
-    Scorecard::ProgressWorker.perform_async(
+  def self.refresh_async(options)
+    Scorecard::RefreshWorker.perform_async(
       Scorecard::Parameters.new(options).expand
     )
   end

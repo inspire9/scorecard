@@ -16,12 +16,12 @@ describe 'Unbadging' do
     end
 
     post
-    Scorecard::Scorer.badge user: user
+    Scorecard::Scorer.refresh user: user
     post.destroy
   end
 
   it 'removes badges from users' do
-    Scorecard::Scorer.badge user: user
+    Scorecard::Scorer.refresh user: user
 
     expect(card.badges.collect(&:name)).to be_empty
   end
@@ -34,7 +34,7 @@ describe 'Unbadging' do
       fired = (payload[:user] == user) && (payload[:badge] == :new_post)
     end
 
-    Scorecard::Scorer.badge user: user
+    Scorecard::Scorer.refresh user: user
 
     ActiveSupport::Notifications.unsubscribe(subscriber)
 
@@ -47,7 +47,7 @@ describe 'Unbadging' do
     }
     second = Post.create! user: user
 
-    Scorecard::Scorer.badge user: user
+    Scorecard::Scorer.refresh user: user
 
     badge = card.badges.first
     expect(badge.name).to eq('Beginner')
@@ -56,7 +56,7 @@ describe 'Unbadging' do
   end
 
   it 'removes badges to users via Sidekiq' do
-    Scorecard::Scorer.badge_async user: user
+    Scorecard::Scorer.refresh_async user: user
 
     expect(card.badges.collect(&:name)).to be_empty
   end
