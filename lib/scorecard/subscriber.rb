@@ -18,21 +18,7 @@ class Scorecard::Subscriber
   end
 
   def points(event)
-    rule = Scorecard.rules.find event.payload[:context]
-    return if rule.nil?
-
-    event.payload[:amount]     ||= rule.amount
-    event.payload[:identifier] ||= event.payload[:gameable].id
-    event.payload[:user]       ||= event.payload[:gameable].user
-
-    return unless rule && rule.allowed?(event.payload)
-
-    point = Scorecard::Point.create(
-      event.payload.slice(:context, :amount, :identifier, :user, :gameable)
-    )
-    ActiveSupport::Notifications.instrument(
-      'scorecard', user: event.payload[:user]
-    ) if point.persisted?
+    Scorecard::PointScorer.call event.payload
   end
 
   def progress(event)
