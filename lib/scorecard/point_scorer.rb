@@ -10,7 +10,7 @@ class Scorecard::PointScorer
   def call
     return if rule.nil?
 
-    payload[:identifier] ||= payload[:gameable].id
+    payload[:identifier] ||= payload[:gameable].id.to_s
     payload[:user]       ||= payload[:gameable].user
     payload[:amount]     ||= amount
 
