@@ -106,7 +106,7 @@ describe 'Scoring points' do
     expect(points).to_not be_empty
   end
 
-  it "fires a generic notification" do
+  it 'fires a generic notification' do
     Scorecard.configure do |config|
       config.rules.add :new_post, 50
     end
@@ -124,5 +124,43 @@ describe 'Scoring points' do
     ActiveSupport::Notifications.unsubscribe(subscriber)
 
     expect(fired).to be_true
+  end
+
+  it 'updates calculated points amounts' do
+    Scorecard.configure do |config|
+      config.rules.add :new_post, lambda { |payload|
+        payload[:gameable].content.split(/\s+/).length * 10
+      }
+    end
+
+    user = User.create!
+    post = Post.create! user: user, content: 'hello world'
+
+    points = Scorecard::Point.where(
+      context:       'new_post',
+      identifier:    post.id.to_s,
+      user_id:       user.id,
+      user_type:     'User',
+      gameable_id:   post.id,
+      gameable_type: 'Post'
+    )
+    expect(points.length).to eq(1)
+    expect(Scorecard::Card.new(user).points).to eq(20)
+
+    post.content = 'one more thing'
+    post.save
+
+    Scorecard::Scorer.points :new_post, gameable: post
+
+    points = Scorecard::Point.where(
+      context:       'new_post',
+      identifier:    post.id.to_s,
+      user_id:       user.id,
+      user_type:     'User',
+      gameable_id:   post.id,
+      gameable_type: 'Post'
+    )
+    expect(points.length).to eq(1)
+    expect(Scorecard::Card.new(user).points).to eq(30)
   end
 end

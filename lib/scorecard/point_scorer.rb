@@ -16,7 +16,7 @@ class Scorecard::PointScorer
 
     return unless allowed?
 
-    instrument 'scorecard', user: payload[:user] if point.persisted?
+    instrument 'scorecard', user: payload[:user] if points_changed?
   end
 
   private
@@ -37,10 +37,25 @@ class Scorecard::PointScorer
     end
   end
 
-  def point
-    Scorecard::Point.create(
-      payload.slice(:context, :amount, :identifier, :user, :gameable)
-    )
+  def existing_point
+    @existing_point ||= Scorecard::Point.where(
+      Scorecard::Parameters.new(
+        payload.slice(:context, :identifier, :user, :gameable)
+      ).expand
+    ).first
+  end
+
+  def points_changed?
+    if existing_point.present?
+      return false if existing_point.amount == payload[:amount]
+
+      existing_point.amount = payload[:amount]
+      existing_point.save
+    else
+      Scorecard::Point.create(
+        payload.slice(:context, :amount, :identifier, :user, :gameable)
+      ).persisted?
+    end
   end
 
   def rule
