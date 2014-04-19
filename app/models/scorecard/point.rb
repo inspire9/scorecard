@@ -17,6 +17,12 @@ class Scorecard::Point < ActiveRecord::Base
 
   scope :chronological, -> { order('created_at ASC') }
   scope :reverse,       -> { order('created_at DESC') }
+  scope :highest_first, -> { order('amount DESC') }
+  scope :since,         ->(time) { for_timeframe time..Time.zone.now }
+  scope :summary,       -> {
+    select('user_type, user_id, SUM(amount) as amount').
+    group('user_type, user_id')
+  }
 
   def self.for_context(context)
     where context: context
@@ -24,6 +30,10 @@ class Scorecard::Point < ActiveRecord::Base
 
   def self.for_user(user)
     where user_id: user.id, user_type: user.class.name
+  end
+
+  def self.for_users(user_class, ids)
+    where user_id: ids, user_type: user_class.name
   end
 
   def self.for_gameable(gameable)
