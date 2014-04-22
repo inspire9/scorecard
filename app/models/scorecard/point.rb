@@ -19,7 +19,7 @@ class Scorecard::Point < ActiveRecord::Base
   scope :reverse,       -> { order('created_at DESC') }
   scope :highest_first, -> { order('amount DESC') }
   scope :since,         ->(time) {
-    where "scorecard_points.created_at > ? OR scorecard_points.id IS NULL", time
+    where "scorecard_points.created_at > ?", time
   }
   scope :summary_with,  ->(model) {
     group("#{model.table_name}.id").select <<-SQL
@@ -44,8 +44,8 @@ ON    scorecard_points.user_type = '#{model.name}'
     where user_id: user.id, user_type: user.class.name
   end
 
-  def self.for_user_ids(user_class, ids)
-    where "#{user_class.table_name}.id" => ids
+  def self.for_user_ids(klass, ids)
+    where user_id: ids, user_type: klass.name
   end
 
   def self.for_gameable(gameable)

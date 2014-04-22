@@ -10,7 +10,9 @@ class Scorecard::Board
   end
 
   def to_a
-    query.collect { |point| [point.user, point.amount] }
+    model.connection.select_all(query).collect { |row|
+      [model.find(row['id']), row['sum_amount'].to_i]
+    }
   end
 
   private
@@ -18,12 +20,14 @@ class Scorecard::Board
   attr_reader :model, :options
 
   def query
-    relation = Scorecard::Point.highest_first
-    relation = relation.join_against model
-    relation = relation.summary_with model
+    subquery = Scorecard::Point.select('user_id, amount')
+    subquery = subquery.since options[:since]               if options[:since]
+    subquery = subquery.for_user_ids model, options[:users] if options[:user]
 
-    relation = relation.for_user_ids model, options[:users] if options[:users]
-    relation = relation.since options[:since]               if options[:since]
-    relation
+    query = model.select("id, COALESCE(SUM(sp.amount), 0) AS sum_amount").
+      joins("LEFT OUTER JOIN (#{subquery.to_sql}) AS sp ON sp.user_id = id").
+      group('id').order('sum_amount DESC')
+    query = query.where id: options[:users] if options[:users]
+    query.to_sql
   end
 end
