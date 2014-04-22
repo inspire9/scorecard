@@ -72,7 +72,7 @@ describe 'Badges' do
     badge = card.badges.first
     expect(badge.name).to eq('Beginner')
     expect(badge.count).to eq(2)
-    expect(badge.gameables).to eq([post, second])
+    expect(badge.gameables).to match_array([post, second])
   end
 
   it "fires a badge notification each time it is awarded" do
