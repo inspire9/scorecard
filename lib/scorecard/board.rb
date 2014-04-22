@@ -1,8 +1,8 @@
 class Scorecard::Board
   include Enumerable
 
-  def initialize(options = {})
-    @options = options
+  def initialize(model, options = {})
+    @model, @options = model, options
   end
 
   def each(&block)
@@ -10,19 +10,20 @@ class Scorecard::Board
   end
 
   def to_a
-    query.collect { |point|
-      {point.user => point.amount}
-    }
+    query.collect { |point| [point.user, point.amount] }
   end
 
   private
 
-  attr_reader :options
+  attr_reader :model, :options
 
   def query
-    relation = Scorecard::Point.summary.highest_first
-    relation = relation.for_users(*options[:users]) if options[:users]
-    relation = relation.since(options[:since])      if options[:since]
+    relation = Scorecard::Point.highest_first
+    relation = relation.join_against model
+    relation = relation.summary_with model
+
+    relation = relation.for_user_ids model, options[:users] if options[:users]
+    relation = relation.since options[:since]               if options[:since]
     relation
   end
 end

@@ -18,10 +18,22 @@ class Scorecard::Point < ActiveRecord::Base
   scope :chronological, -> { order('created_at ASC') }
   scope :reverse,       -> { order('created_at DESC') }
   scope :highest_first, -> { order('amount DESC') }
-  scope :since,         ->(time) { for_timeframe time..Time.zone.now }
-  scope :summary,       -> {
-    select('user_type, user_id, SUM(amount) as amount').
-    group('user_type, user_id')
+  scope :since,         ->(time) {
+    where "scorecard_points.created_at > ? OR scorecard_points.id IS NULL", time
+  }
+  scope :summary_with,  ->(model) {
+    group("#{model.table_name}.id").select <<-SQL
+'#{model.name}'::varchar AS user_type,
+#{model.table_name}.id   AS user_id,
+COALESCE(SUM(amount), 0) AS amount
+    SQL
+  }
+  scope :join_against,  ->(model) {
+    joins <<-SQL
+RIGHT OUTER JOIN #{model.table_name}
+ON    scorecard_points.user_type = '#{model.name}'
+  AND scorecard_points.user_id   = #{model.table_name}.id
+    SQL
   }
 
   def self.for_context(context)
@@ -32,8 +44,8 @@ class Scorecard::Point < ActiveRecord::Base
     where user_id: user.id, user_type: user.class.name
   end
 
-  def self.for_users(user_class, ids)
-    where user_id: ids, user_type: user_class.name
+  def self.for_user_ids(user_class, ids)
+    where "#{user_class.table_name}.id" => ids
   end
 
   def self.for_gameable(gameable)

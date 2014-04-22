@@ -23,7 +23,7 @@ describe 'Reading points' do
     Scorecard::Scorer.points :new_user, gameable: user_a, user: user_a
     Scorecard::Scorer.points :new_user, gameable: user_b, user: user_b
 
-    expect(Scorecard::Board.new.to_a).to eq([{user_a => 50}, {user_b => 20}])
+    expect(Scorecard::Board.new(User).to_a).to eq([[user_a, 50], [user_b, 20]])
   end
 
   it 'can limit leadership boards by users' do
@@ -34,9 +34,9 @@ describe 'Reading points' do
     Scorecard::Scorer.points :new_user, gameable: user_b, user: user_b
     Scorecard::Scorer.points :new_user, gameable: user_c, user: user_c
 
-    board = Scorecard::Board.new users: [User, [user_a.id, user_b.id]]
+    board = Scorecard::Board.new User, users: [user_a.id, user_b.id]
 
-    expect(board.to_a).to eq([{user_b => 50}, {user_a => 20}])
+    expect(board.to_a).to eq([[user_b, 50], [user_a, 20]])
   end
 
   it 'can limit points by timeframe' do
@@ -50,8 +50,27 @@ describe 'Reading points' do
       created_at: 2.days.ago
     )
 
-    board = Scorecard::Board.new since: 1.day.ago
+    board = Scorecard::Board.new User, since: 1.day.ago
 
-    expect(board.to_a).to eq([{user_b => 30}, {user_a => 20}])
+    expect(board.to_a).to eq([[user_b, 30], [user_a, 20]])
+  end
+
+  it 'can return all matching objects even without points' do
+    user_a, user_b = User.create!, User.create!
+    post = Post.create! user: user_b
+
+    board = Scorecard::Board.new User, since: 1.day.ago
+
+    expect(board.to_a).to eq([[user_b, 30], [user_a, 0]])
+  end
+
+  it 'can return all users in a limited set' do
+    user_a, user_b = User.create!, User.create!
+    post = Post.create! user: user_b
+
+    board = Scorecard::Board.new User, since: 1.day.ago,
+      users: [user_a.id, user_b.id]
+
+    expect(board.to_a).to eq([[user_b, 30], [user_a, 0]])
   end
 end
