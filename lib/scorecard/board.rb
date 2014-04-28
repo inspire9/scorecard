@@ -28,6 +28,7 @@ class Scorecard::Board
       joins("LEFT OUTER JOIN (#{subquery.to_sql}) AS sp ON sp.user_id = id").
       group('id').order('sum_amount DESC')
     query = query.where id: options[:users] if options[:users]
+    query = query.limit options[:limit]     if options[:limit]
     query.to_sql
   end
 end
