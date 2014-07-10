@@ -22,6 +22,7 @@ class Scorecard::Board
   def query
     subquery = Scorecard::Point.select('user_id, amount')
     subquery = subquery.since options[:since]               if options[:since]
+    subquery = subquery.within options[:within]             if options[:within]
     subquery = subquery.for_user_ids model, options[:users] if options[:user]
 
     query = model.select("id, COALESCE(SUM(sp.amount), 0) AS sum_amount").

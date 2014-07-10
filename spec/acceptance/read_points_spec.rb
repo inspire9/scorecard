@@ -55,6 +55,22 @@ describe 'Reading points' do
     expect(board.to_a).to eq([[user_b, 30], [user_a, 20]])
   end
 
+  it 'can limit points by a time range' do
+    user_a, user_b = User.create!, User.create!
+    post = Post.create! user: user_b
+
+    Scorecard::Scorer.points :new_user, gameable: user_a, user: user_a
+    Scorecard::Scorer.points :new_user, gameable: user_b, user: user_b
+
+    Scorecard::Point.where(user_id: user_b, context: 'new_user').update_all(
+      created_at: 2.days.ago
+    )
+
+    board = Scorecard::Board.new User, within: 3.days.ago..1.day.ago
+
+    expect(board.to_a).to eq([[user_b, 20], [user_a, 0]])
+  end
+
   it 'can return all matching objects even without points' do
     user_a, user_b = User.create!, User.create!
     post = Post.create! user: user_b

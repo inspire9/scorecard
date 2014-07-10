@@ -21,6 +21,7 @@ class Scorecard::Point < ActiveRecord::Base
   scope :since,         ->(time) {
     where "scorecard_points.created_at > ?", time
   }
+  scope :within,        ->(range) { where created_at: range }
   scope :summary_with,  ->(model) {
     group("#{model.table_name}.id").select <<-SQL
 '#{model.name}'::varchar AS user_type,
