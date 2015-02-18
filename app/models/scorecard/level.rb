@@ -3,7 +3,7 @@ class Scorecard::Level < ActiveRecord::Base
 
   belongs_to :user, polymorphic: true
 
-  if Rails.version.to_s < '4.0.0'
+  if defined?(ProtectedAttributes) || !defined?(ActionController::StrongParameters)
     attr_accessible :amount, :user
   end
 
