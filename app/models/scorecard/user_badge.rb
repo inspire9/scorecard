@@ -4,7 +4,7 @@ class Scorecard::UserBadge < ActiveRecord::Base
   belongs_to :user,     polymorphic: true
   belongs_to :gameable, polymorphic: true
 
-  if Rails.version.to_s < '4.0.0'
+  if defined?(ProtectedAttributes) || !defined?(ActionController::StrongParameters)
     attr_accessible :badge, :identifier, :gameable, :user
   end
 
