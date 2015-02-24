@@ -30,6 +30,19 @@ class Scorecard::Board
       group('id').order('sum_amount DESC')
     query = query.where id: options[:users] if options[:users]
     query = query.limit options[:limit]     if options[:limit]
+    query = query.offset page_offset        if paged?
     query.to_sql
+  end
+
+  def page
+    options[:page].present? ? options[:page].to_i : 1
+  end
+
+  def paged?
+    options[:page].present?
+  end
+
+  def page_offset
+    (page - 1) * options[:limit]
   end
 end
