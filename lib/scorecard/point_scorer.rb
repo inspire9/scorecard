@@ -16,7 +16,9 @@ class Scorecard::PointScorer
 
     return unless allowed?
 
-    instrument 'scorecard', user: payload[:user] if points_changed?
+    if points_changed?
+      instrument 'scorecard', user: payload[:user], point: point
+    end
   end
 
   private
@@ -37,24 +39,36 @@ class Scorecard::PointScorer
     end
   end
 
+  def existing_point?
+    return @existing_point_exists unless @existing_point_exists.nil?
+
+    @existing_point_exists = existing_point.present?
+  end
+
   def existing_point
-    @existing_point ||= Scorecard::Point.where(
+    @existing_point ||= Scorecard::Point.find_by(
       Scorecard::Parameters.new(
         payload.slice(:context, :identifier, :user, :gameable)
       ).expand
-    ).first
+    )
+  end
+
+  def point
+    return existing_point if existing_point?
+
+    @point ||= Scorecard::Point.create(
+      payload.slice(:context, :amount, :identifier, :user, :gameable)
+    )
   end
 
   def points_changed?
-    if existing_point.present?
+    if existing_point?
       return false if existing_point.amount == payload[:amount]
 
       existing_point.amount = payload[:amount]
       existing_point.save
     else
-      Scorecard::Point.create(
-        payload.slice(:context, :amount, :identifier, :user, :gameable)
-      ).persisted?
+      point.persisted?
     end
   end
 

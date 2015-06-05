@@ -116,7 +116,7 @@ describe 'Scoring points' do
 
     subscriber = ActiveSupport::Notifications.subscribe 'scorecard' do |*args|
       event = ActiveSupport::Notifications::Event.new(*args)
-      fired = (event.payload[:user] == user)
+      fired = (event.payload[:user] == user) && event.payload[:point].present?
     end
 
     post = Post.create! user: user
