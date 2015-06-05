@@ -8,7 +8,7 @@ class CreatePoints < ActiveRecord::Migration
       table.integer :user_id,       null: false
       table.string  :gameable_type
       table.integer :gameable_id
-      table.timestamps
+      table.timestamps              null: false
     end
 
     add_index :scorecard_points, :context
